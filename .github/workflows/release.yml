@@ -1,0 +1,34 @@
+# Builds isla.exe and attaches it to a GitHub Release whenever a version
+# tag is pushed:  git tag v0.2.0 && git push origin v0.2.0
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: cargo build --release --locked
+
+      - name: Package
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory dist | Out-Null
+          Copy-Item target\release\isla.exe dist\isla.exe
+          Compress-Archive -Path dist\isla.exe, README.md -DestinationPath "dist\isla-${{ github.ref_name }}-windows-x64.zip"
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/isla.exe
+            dist/isla-${{ github.ref_name }}-windows-x64.zip
+          generate_release_notes: true
