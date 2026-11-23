@@ -3,7 +3,7 @@ name = "isla"
 version = "0.1.0"
 edition = "2021"
 # The in-app update check and one-click update read releases from here.
-repository = "https://github.com/rafaelvons/isla"
+repository = "https://github.com/paulgoated/isla"
 description = "Isla - a Dynamic Island style notch for Windows, written in Rust"
 
 [dependencies]
